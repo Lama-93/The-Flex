@@ -2,49 +2,90 @@
   "status": "success",
   "result": [
     {
-      "id": 7453,
-      "type": "host-to-guest",
+      "id": 1001,
+      "listing_id": "APT-001",
+      "type": "guest-to-host",
       "status": "published",
-      "rating": null,
-      "publicReview": "Shane and family are wonderful! Would definitely host again :)",
-      "reviewCategory": [
-        { "category": "cleanliness", "rating": 10 },
-        { "category": "communication", "rating": 10 },
-        { "category": "respect_house_rules", "rating": 10 }
-      ],
-      "submittedAt": "2020-08-21 22:45:14",
-      "guestName": "Shane Finkelstein",
-      "listingName": "2B N1 A - 29 Shoreditch Heights"
-    },
-    {
-      "id": 7454,
-      "type": "host-to-guest",
-      "status": "published",
-      "rating": null,
-      "publicReview": "Great guest, easy communication.",
-      "reviewCategory": [
-        { "category": "cleanliness", "rating": 9 },
-        { "category": "communication", "rating": 8 },
-        { "category": "respect_house_rules", "rating": 9 }
-      ],
-      "submittedAt": "2020-09-10 15:30:00",
-      "guestName": "Emily Carter",
-      "listingName": "Cozy Loft in Downtown"
-    },
-    {
-      "id": 7455,
-      "type": "host-to-guest",
-      "status": "published",
-      "rating": null,
-      "publicReview": "Very respectful and tidy guest.",
+      "rating": 9,
+      "publicReview": "Lovely apartment, very clean and close to the city center.",
+      "channel": "Airbnb",
+      "date": "2025-01-12",
       "reviewCategory": [
         { "category": "cleanliness", "rating": 10 },
         { "category": "communication", "rating": 9 },
-        { "category": "respect_house_rules", "rating": 10 }
-      ],
-      "submittedAt": "2020-10-05 18:20:45",
-      "guestName": "Michael Brown",
-      "listingName": "Modern Studio Apartment"
+        { "category": "location", "rating": 8 }
+      ]
+    },
+    {
+      "id": 1002,
+      "listing_id": "APT-001",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 7,
+      "publicReview": "Good location but the Wi-Fi was unstable.",
+      "channel": "Booking.com",
+      "date": "2025-02-03",
+      "reviewCategory": [
+        { "category": "cleanliness", "rating": 8 },
+        { "category": "communication", "rating": 6 },
+        { "category": "location", "rating": 9 }
+      ]
+    },
+    {
+      "id": 1003,
+      "listing_id": "APT-002",
+      "type": "host-to-guest",
+      "status": "published",
+      "rating": null,
+      "publicReview": "Great guest, very respectful and left the place tidy.",
+      "channel": "Airbnb",
+      "date": "2025-01-28",
+      "reviewCategory": []
+    },
+    {
+      "id": 1004,
+      "listing_id": "APT-002",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 10,
+      "publicReview": "Amazing stay, host was very helpful and the view was fantastic!",
+      "channel": "VRBO",
+      "date": "2025-03-15",
+      "reviewCategory": [
+        { "category": "cleanliness", "rating": 10 },
+        { "category": "communication", "rating": 10 },
+        { "category": "location", "rating": 10 }
+      ]
+    },
+    {
+      "id": 1005,
+      "listing_id": "APT-003",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 6,
+      "publicReview": "The apartment was okay, but noisy at night.",
+      "channel": "Airbnb",
+      "date": "2025-02-20",
+      "reviewCategory": [
+        { "category": "cleanliness", "rating": 7 },
+        { "category": "communication", "rating": 6 },
+        { "category": "location", "rating": 5 }
+      ]
+    },
+    {
+      "id": 1006,
+      "listing_id": "APT-003",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 8,
+      "publicReview": "Comfortable stay overall, host responded quickly.",
+      "channel": "Booking.com",
+      "date": "2025-03-02",
+      "reviewCategory": [
+        { "category": "cleanliness", "rating": 8 },
+        { "category": "communication", "rating": 9 },
+        { "category": "location", "rating": 7 }
+      ]
     }
   ]
 }
