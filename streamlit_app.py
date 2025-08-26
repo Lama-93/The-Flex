@@ -1,59 +1,66 @@
-# import streamlit as st
-
-# st.title("🎈 123")
-# st.write(
-#     "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-# )
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import json
 
-# Load mock reviews
-with open("mock_reviews.json", "r") as f:
-    reviews = json.load(f)
+# Load mock data
+def load_data():
+    with open("mock_reviews.json", "r") as f:
+        data = json.load(f)
+    return data["result"]
 
-df = pd.DataFrame(reviews)
+# Convert JSON to DataFrame for easier handling
+def json_to_df(data):
+    rows = []
+    for review in data:
+        base = {
+            "id": review["id"],
+            "type": review["type"],
+            "status": review["status"],
+            "publicReview": review["publicReview"],
+            "guestName": review["guestName"],
+            "listingName": review["listingName"],
+            "submittedAt": review["submittedAt"]
+        }
+        for cat in review["reviewCategory"]:
+            row = base.copy()
+            row["category"] = cat["category"]
+            row["rating"] = cat["rating"]
+            rows.append(row)
+    return pd.DataFrame(rows)
 
-st.set_page_config(page_title="F Living Reviews Dashboard", layout="wide")
+# Main app
+def main():
+    st.title("📊 Reviews Dashboard")
 
-st.title("🏘️ F Living Reviews Dashboard")
-st.write("Manager view of property performance based on guest reviews.")
+    data = load_data()
+    df = json_to_df(data)
 
-# Sidebar filters
-st.sidebar.header("🔎 Filters")
-property_filter = st.sidebar.multiselect("Select Property", df["property_name"].unique())
-channel_filter = st.sidebar.multiselect("Select Channel", df["channel"].unique())
-rating_filter = st.sidebar.slider("Minimum Rating", 0.0, 5.0, 0.0, 0.1)
+    # Sidebar filters
+    st.sidebar.header("Filters")
+    guest_filter = st.sidebar.multiselect("Select Guest(s)", df["guestName"].unique())
+    category_filter = st.sidebar.multiselect("Select Category", df["category"].unique())
 
-filtered_df = df.copy()
-if property_filter:
-    filtered_df = filtered_df[filtered_df["property_name"].isin(property_filter)]
-if channel_filter:
-    filtered_df = filtered_df[filtered_df["channel"].isin(channel_filter)]
-filtered_df = filtered_df[filtered_df["rating"] >= rating_filter]
+    filtered_df = df.copy()
+    if guest_filter:
+        filtered_df = filtered_df[filtered_df["guestName"].isin(guest_filter)]
+    if category_filter:
+        filtered_df = filtered_df[filtered_df["category"].isin(category_filter)]
 
-# Metrics
-st.subheader("📊 Summary Metrics")
-col1, col2, col3 = st.columns(3)
-col1.metric("Total Reviews", len(filtered_df))
-col2.metric("Avg. Rating", round(filtered_df["rating"].mean(), 2) if not filtered_df.empty else "N/A")
-col3.metric("Approved Reviews", filtered_df["approved"].sum())
+    # Show reviews table
+    st.subheader("Reviews")
+    st.dataframe(filtered_df)
 
-# Trend chart
-st.subheader("📈 Rating Trend Over Time")
-if not filtered_df.empty:
-    trend = px.line(filtered_df, x="date", y="rating", color="property_name", markers=True)
-    st.plotly_chart(trend, use_container_width=True)
-else:
-    st.info("No data matches the filters.")
+    # Aggregated ratings
+    st.subheader("Average Ratings by Category")
+    avg_ratings = filtered_df.groupby("category")["rating"].mean().reset_index()
+    st.bar_chart(avg_ratings.set_index("category"))
 
-# Reviews Table
-st.subheader("📝 Reviews")
-st.dataframe(filtered_df[["property_name", "channel", "rating", "date", "comment", "approved"]])
+    # Timeline of submissions
+    st.subheader("Review Submission Timeline")
+    timeline = pd.to_datetime(filtered_df["submittedAt"])
+    timeline_df = pd.DataFrame({"submittedAt": timeline, "count": 1})
+    timeline_df = timeline_df.groupby(timeline_df["submittedAt"].dt.date).count()
+    st.line_chart(timeline_df)
 
-# Approve/Unapprove Reviews
-st.subheader("✅ Manage Approvals")
-for idx, row in filtered_df.iterrows():
-    approved = st.checkbox(f"{row['property_name']} - {row['comment'][:40]}...", value=row["approved"])
-    df.loc[idx, "approved"] = approved
+if __name__ == "__main__":
+    main()
