@@ -1,0 +1,22 @@
+[
+  {
+    "property_id": "p1",
+    "property_name": "Luxury Villa",
+    "review_type": "guest",
+    "channel": "Airbnb",
+    "rating": 4.7,
+    "date": "2025-08-20",
+    "comment": "Amazing stay!",
+    "approved": false
+  },
+  {
+    "property_id": "p2",
+    "property_name": "Downtown Apartment",
+    "review_type": "guest",
+    "channel": "Booking.com",
+    "rating": 3.8,
+    "date": "2025-08-18",
+    "comment": "Good location but noisy at night.",
+    "approved": true
+  }
+]
