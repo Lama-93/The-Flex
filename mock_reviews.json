@@ -1,102 +1,72 @@
-{
-  "status": "success",
-  "result": [
-    {
-      "id": 1001,
-      "type": "host-to-guest",
-      "status": "published",
-      "rating": null,
-      "publicReview": "Sarah was a wonderful guest, very polite and respectful.",
-      "reviewCategory": [
-        {
-          "category": "cleanliness",
-          "rating": 9
-        },
-        {
-          "category": "communication",
-          "rating": 10
-        },
-        {
-          "category": "respect_house_rules",
-          "rating": 10
-        }
-      ],
-      "submittedAt": "2021-07-15 19:20:33",
-      "guestName": "Sarah Johnson",
-      "listingName": "Cozy Apartment in Downtown"
-    },
-    {
-      "id": 1002,
-      "type": "guest-to-host",
-      "status": "published",
-      "rating": null,
-      "publicReview": "The place was clean and had everything I needed. Great stay!",
-      "reviewCategory": [
-        {
-          "category": "cleanliness",
-          "rating": 10
-        },
-        {
-          "category": "communication",
-          "rating": 9
-        },
-        {
-          "category": "value",
-          "rating": 9
-        }
-      ],
-      "submittedAt": "2021-08-02 11:05:12",
-      "guestName": "Michael Smith",
-      "listingName": "Modern Loft with City View"
-    },
-    {
-      "id": 1003,
-      "type": "host-to-guest",
-      "status": "published",
-      "rating": null,
-      "publicReview": "David left the apartment very tidy. Would host again!",
-      "reviewCategory": [
-        {
-          "category": "cleanliness",
-          "rating": 10
-        },
-        {
-          "category": "communication",
-          "rating": 10
-        },
-        {
-          "category": "respect_house_rules",
-          "rating": 10
-        }
-      ],
-      "submittedAt": "2021-09-10 09:45:55",
-      "guestName": "David Lee",
-      "listingName": "Quiet Studio near the Park"
-    },
-    {
-      "id": 1004,
-      "type": "guest-to-host",
-      "status": "published",
-      "rating": null,
-      "publicReview": "Lovely house, excellent location. Host was very responsive.",
-      "reviewCategory": [
-        {
-          "category": "cleanliness",
-          "rating": 9
-        },
-        {
-          "category": "communication",
-          "rating": 10
-        },
-        {
-          "category": "value",
-          "rating": 8
-        }
-      ],
-      "submittedAt": "2021-10-01 21:12:40",
-      "guestName": "Emily Brown",
-      "listingName": "Family Home with Garden"
-    }
-  ]
-}
-
+[
+  {
+    "review_id": 1,
+    "user": "Alice",
+    "rating": 5,
+    "review": "Absolutely love this product! The quality is amazing.",
+    "date": "2025-08-01"
+  },
+  {
+    "review_id": 2,
+    "user": "Bob",
+    "rating": 4,
+    "review": "Good value for money, but shipping took too long.",
+    "date": "2025-08-02"
+  },
+  {
+    "review_id": 3,
+    "user": "Carla",
+    "rating": 2,
+    "review": "Not satisfied. The product was smaller than expected.",
+    "date": "2025-08-03"
+  },
+  {
+    "review_id": 4,
+    "user": "David",
+    "rating": 5,
+    "review": "Exceeded my expectations! Will definitely recommend.",
+    "date": "2025-08-05"
+  },
+  {
+    "review_id": 5,
+    "user": "Ella",
+    "rating": 3,
+    "review": "Average experience. Nothing special.",
+    "date": "2025-08-07"
+  },
+  {
+    "review_id": 6,
+    "user": "Farid",
+    "rating": 1,
+    "review": "Terrible quality. Stopped working after 2 days.",
+    "date": "2025-08-08"
+  },
+  {
+    "review_id": 7,
+    "user": "Grace",
+    "rating": 4,
+    "review": "Good overall, but packaging could be better.",
+    "date": "2025-08-10"
+  },
+  {
+    "review_id": 8,
+    "user": "Hassan",
+    "rating": 5,
+    "review": "Fantastic! Delivered earlier than expected.",
+    "date": "2025-08-12"
+  },
+  {
+    "review_id": 9,
+    "user": "Ivy",
+    "rating": 2,
+    "review": "Product doesn’t match the description. Disappointed.",
+    "date": "2025-08-13"
+  },
+  {
+    "review_id": 10,
+    "user": "Jack",
+    "rating": 5,
+    "review": "One of the best purchases I’ve made this year!",
+    "date": "2025-08-15"
+  }
+]
