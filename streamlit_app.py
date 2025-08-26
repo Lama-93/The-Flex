@@ -2,8 +2,9 @@ import json
 import pandas as pd
 
 # Load JSON data
-with open("data/mock_reviews.json", "r") as f:
+with open("mock_reviews.json", "r") as f:
     data = json.load(f)
+
 
 reviews = data["result"]
 
