@@ -1,22 +1,102 @@
-[
-  {
-    "property_id": "p1",
-    "property_name": "Luxury Villa",
-    "review_type": "guest",
-    "channel": "Airbnb",
-    "rating": 4.7,
-    "date": "2025-08-20",
-    "comment": "Amazing stay!",
-    "approved": false
-  },
-  {
-    "property_id": "p2",
-    "property_name": "Downtown Apartment",
-    "review_type": "guest",
-    "channel": "Booking.com",
-    "rating": 3.8,
-    "date": "2025-08-18",
-    "comment": "Good location but noisy at night.",
-    "approved": true
-  }
-]
+{
+  "status": "success",
+  "result": [
+    {
+      "id": 1001,
+      "type": "host-to-guest",
+      "status": "published",
+      "rating": null,
+      "publicReview": "Sarah was a wonderful guest, very polite and respectful.",
+      "reviewCategory": [
+        {
+          "category": "cleanliness",
+          "rating": 9
+        },
+        {
+          "category": "communication",
+          "rating": 10
+        },
+        {
+          "category": "respect_house_rules",
+          "rating": 10
+        }
+      ],
+      "submittedAt": "2021-07-15 19:20:33",
+      "guestName": "Sarah Johnson",
+      "listingName": "Cozy Apartment in Downtown"
+    },
+    {
+      "id": 1002,
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": null,
+      "publicReview": "The place was clean and had everything I needed. Great stay!",
+      "reviewCategory": [
+        {
+          "category": "cleanliness",
+          "rating": 10
+        },
+        {
+          "category": "communication",
+          "rating": 9
+        },
+        {
+          "category": "value",
+          "rating": 9
+        }
+      ],
+      "submittedAt": "2021-08-02 11:05:12",
+      "guestName": "Michael Smith",
+      "listingName": "Modern Loft with City View"
+    },
+    {
+      "id": 1003,
+      "type": "host-to-guest",
+      "status": "published",
+      "rating": null,
+      "publicReview": "David left the apartment very tidy. Would host again!",
+      "reviewCategory": [
+        {
+          "category": "cleanliness",
+          "rating": 10
+        },
+        {
+          "category": "communication",
+          "rating": 10
+        },
+        {
+          "category": "respect_house_rules",
+          "rating": 10
+        }
+      ],
+      "submittedAt": "2021-09-10 09:45:55",
+      "guestName": "David Lee",
+      "listingName": "Quiet Studio near the Park"
+    },
+    {
+      "id": 1004,
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": null,
+      "publicReview": "Lovely house, excellent location. Host was very responsive.",
+      "reviewCategory": [
+        {
+          "category": "cleanliness",
+          "rating": 9
+        },
+        {
+          "category": "communication",
+          "rating": 10
+        },
+        {
+          "category": "value",
+          "rating": 8
+        }
+      ],
+      "submittedAt": "2021-10-01 21:12:40",
+      "guestName": "Emily Brown",
+      "listingName": "Family Home with Garden"
+    }
+  ]
+}
+
