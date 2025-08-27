@@ -255,36 +255,36 @@ st.markdown("---")
 st.info("Tip: Press Save in the sidebar to write display flags to `mock_reviews.json`. When deploying to Streamlit Cloud, saving to the repo depends on how you configure storage — for a production app you'd push the changes to a backend service or database.")
 
 st.caption("Built for the Flex Living developer assessment. Contact the product owner to wire this to a real Hostaway integration and a persistent DB.")
-# ----------------- Public View: Property Page -----------------
-st.sidebar.markdown("---")
-view_mode = st.sidebar.radio("View Mode", ["Manager Dashboard", "Public Property Page"])
+# # ----------------- Public View: Property Page -----------------
+# st.sidebar.markdown("---")
+# view_mode = st.sidebar.radio("View Mode", ["Manager Dashboard", "Public Property Page"])
 
-if view_mode == "Public Property Page":
-    st.title("Flex Living — Property Page")
-    st.write("Public view • Reviews shown here are only those approved by managers.")
+# if view_mode == "Public Property Page":
+#     st.title("Flex Living — Property Page")
+#     st.write("Public view • Reviews shown here are only those approved by managers.")
 
-    # Select property
-    properties = sorted(df["listingName"].dropna().unique().tolist())
-    selected_property = st.selectbox("Select Property", properties)
+#     # Select property
+#     properties = sorted(df["listingName"].dropna().unique().tolist())
+#     selected_property = st.selectbox("Select Property", properties)
 
-    approved_reviews = df[
-        (df["listingName"] == selected_property) &
-        (df["displayOnWebsite"] == True)
-    ].sort_values("date", ascending=False)
+#     approved_reviews = df[
+#         (df["listingName"] == selected_property) &
+#         (df["displayOnWebsite"] == True)
+#     ].sort_values("date", ascending=False)
 
-    # Property detail mockup
-    st.subheader(selected_property)
-    st.image("https://via.placeholder.com/800x400?text=Property+Image", use_column_width=True)  
-    st.write("Property description and details would go here (mockup).")
+#     # Property detail mockup
+#     st.subheader(selected_property)
+#     st.image("https://via.placeholder.com/800x400?text=Property+Image", use_column_width=True)  
+#     st.write("Property description and details would go here (mockup).")
 
-    st.markdown("### Guest Reviews")
-    if approved_reviews.empty:
-        st.info("No reviews approved for this property yet.")
-    else:
-        for _, row in approved_reviews.iterrows():
-            with st.container():
-                st.markdown(f"⭐ {row['rating'] if pd.notna(row['rating']) else 'N/A'}")
-                st.markdown(f"**{row['guestName']}** — {row['date'].date() if pd.notna(row['date']) else 'Unknown date'}")
-                if row.get("publicReview"):
-                    st.write(f"“{row['publicReview']}”")
-                st.markdown("---")
+#     st.markdown("### Guest Reviews")
+#     if approved_reviews.empty:
+#         st.info("No reviews approved for this property yet.")
+#     else:
+#         for _, row in approved_reviews.iterrows():
+#             with st.container():
+#                 st.markdown(f"⭐ {row['rating'] if pd.notna(row['rating']) else 'N/A'}")
+#                 st.markdown(f"**{row['guestName']}** — {row['date'].date() if pd.notna(row['date']) else 'Unknown date'}")
+#                 if row.get("publicReview"):
+#                     st.write(f"“{row['publicReview']}”")
+#                 st.markdown("---")
