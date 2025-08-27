@@ -134,7 +134,7 @@ min_rating, max_rating = st.sidebar.slider("Rating range", 0.0, 10.0, (0.0, 10.0
 
 # categories discovered dynamically
 category_cols = [c for c in df.columns if c.startswith("cat_")]
-categories = ["All"] + [c.replace("cat_", "") for c in category_cols]
+categories = ["All"] + [c.replace("cat_", "") for c in category_cols if c]  # remove empty names
 selected_category = st.sidebar.selectbox("Category (review score)", categories, index=0)
 
 date_min = df["date"].min()
