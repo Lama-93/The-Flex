@@ -21,9 +21,10 @@ DATA_PATH = Path("mock_reviews.json")
 st.set_page_config(page_title="Flex Living — Reviews Dashboard", layout="wide")
 
 @st.cache_data
+@st.cache_data
 def load_reviews(path: Path):
     with path.open("r", encoding="utf-8") as f:
-        raw = json.load(f)
+        raw = json.load(f)   # <-- keep the whole JSON
     reviews = raw.get("result", [])
     # Normalize to DataFrame
     rows = []
@@ -48,16 +49,15 @@ def load_reviews(path: Path):
         except Exception:
             dt = None
         base["date"] = dt
-        # categories: convert to dict of category->rating (flatten)
-        cat_list = r.get("reviewCategory", [])
-        for cat in cat_list:
+        # categories: flatten
+        for cat in r.get("reviewCategory", []):
             base[f"cat_{cat.get('category')}"] = cat.get("rating")
         rows.append(base)
     df = pd.DataFrame(rows)
-    # ensure date dtype and derived columns
     df["date"] = pd.to_datetime(df["date"])
     df["year_month"] = df["date"].dt.to_period("M").astype(str)
-    return df, reviews
+    return df, raw   # <--- return the whole raw JSON, not reviews list
+
 
 def save_reviews(original_raw, df, path: Path):
     # map displayOnWebsite changes back to original_raw by id
