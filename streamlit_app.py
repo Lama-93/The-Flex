@@ -16,8 +16,8 @@ DATA_PATH = Path("mock_reviews.json")
 st.set_page_config(page_title="Flex Living — Reviews Dashboard", layout="wide")
 
 # 🔑 Put your Hostaway credentials here
-HOSTAWAY_ACCOUNT_ID = st.secrets.get("61148", "")
-HOSTAWAY_API_KEY = st.secrets.get("f94377ebbbb479490bb3ec364649168dc443dda2e4830facaf5de2e74ccc9152", "")
+HOSTAWAY_ACCOUNT_ID = st.secrets.get("HOSTAWAY_ACCOUNT_ID", "")
+HOSTAWAY_API_KEY = st.secrets.get("HOSTAWAY_API_KEY", "")
 
 # ----------------- API Fetch -----------------
 def fetch_hostaway_reviews(account_id, api_key, limit=50):
