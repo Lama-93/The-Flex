@@ -1,22 +1,205 @@
-[
-  {
-    "property_id": "p1",
-    "property_name": "Luxury Villa",
-    "review_type": "guest",
-    "channel": "Airbnb",
-    "rating": 4.7,
-    "date": "2025-08-20",
-    "comment": "Amazing stay!",
-    "approved": false
-  },
-  {
-    "property_id": "p2",
-    "property_name": "Downtown Apartment",
-    "review_type": "guest",
-    "channel": "Booking.com",
-    "rating": 3.8,
-    "date": "2025-08-18",
-    "comment": "Good location but noisy at night.",
-    "approved": true
-  }
-]
+{
+  "status": "success",
+  "result": [
+    {
+      "id": 7453,
+      "listingId": 1001,
+      "listingName": "Flex_Living - Downtown Studio",
+      "type": "host-to-guest",
+      "status": "published",
+      "rating": 9,
+      "publicReview": "Shane and family are wonderful! Would definitely host again :)",
+      "reviewCategory": [
+        {"category": "cleanliness", "rating": 9},
+        {"category": "location", "rating": 10},
+        {"category": "value", "rating": 9}
+      ],
+      "channel": "Airbnb",
+      "channelId": "AB-1001",
+      "guestName": "Shane P.",
+      "date": "2024-10-12T10:20:00",
+      "displayOnWebsite": true
+    },
+    {
+      "id": 7454,
+      "listingId": 1001,
+      "listingName": "Flex_Living - Downtown Studio",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 7,
+      "publicReview": "Nice place, but the AC was a bit noisy.",
+      "reviewCategory": [
+        {"category": "cleanliness", "rating": 8},
+        {"category": "amenities", "rating": 6}
+      ],
+      "channel": "Booking.com",
+      "channelId": "BK-1001",
+      "guestName": "Liu W.",
+      "date": "2024-08-05T14:50:00",
+      "displayOnWebsite": false
+    },
+    {
+      "id": 7455,
+      "listingId": 1002,
+      "listingName": "Flex_Living - Seaview Apartment",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 10,
+      "publicReview": "Stunning view, perfect for a weekend getaway.",
+      "reviewCategory": [
+        {"category": "location", "rating": 10},
+        {"category": "cleanliness", "rating": 10},
+        {"category": "value", "rating": 9}
+      ],
+      "channel": "Vrbo",
+      "channelId": "VB-2001",
+      "guestName": "Carlos M.",
+      "date": "2024-07-20T09:10:00",
+      "displayOnWebsite": true
+    },
+    {
+      "id": 7456,
+      "listingId": 1003,
+      "listingName": "Flex_Living - Suburban House",
+      "type": "host-to-guest",
+      "status": "published",
+      "rating": 5,
+      "publicReview": "Clean but the WiFi dropped multiple times.",
+      "reviewCategory": [
+        {"category": "cleanliness", "rating": 6},
+        {"category": "amenities", "rating": 4}
+      ],
+      "channel": "Airbnb",
+      "channelId": "AB-3001",
+      "guestName": "Aisha K.",
+      "date": "2024-06-28T20:30:00",
+      "displayOnWebsite": false
+    },
+    {
+      "id": 7457,
+      "listingId": 1002,
+      "listingName": "Flex_Living - Seaview Apartment",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 8,
+      "publicReview": "Lovely stay, check-in could be smoother.",
+      "reviewCategory": [
+        {"category": "checkin", "rating": 6},
+        {"category": "location", "rating": 9}
+      ],
+      "channel": "Booking.com",
+      "channelId": "BK-2001",
+      "guestName": "Natalie R.",
+      "date": "2024-08-01T16:00:00",
+      "displayOnWebsite": true
+    },
+    {
+      "id": 7458,
+      "listingId": 1003,
+      "listingName": "Flex_Living - Suburban House",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 6,
+      "publicReview": "Good for families, kitchen equipment was limited.",
+      "reviewCategory": [
+        {"category": "amenities", "rating": 5},
+        {"category": "value", "rating": 7}
+      ],
+      "channel": "Vrbo",
+      "channelId": "VB-3001",
+      "guestName": "Owen T.",
+      "date": "2024-09-02T11:15:00",
+      "displayOnWebsite": false
+    },
+    {
+      "id": 7459,
+      "listingId": 1004,
+      "listingName": "Flex_Living - City Loft",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 4,
+      "publicReview": "Small issues: dirty mugs and late check-in instructions.",
+      "reviewCategory": [
+        {"category": "cleanliness", "rating": 3},
+        {"category": "communication", "rating": 4}
+      ],
+      "channel": "Airbnb",
+      "channelId": "AB-4001",
+      "guestName": "Marta D.",
+      "date": "2024-05-11T08:00:00",
+      "displayOnWebsite": false
+    },
+    {
+      "id": 7460,
+      "listingId": 1004,
+      "listingName": "Flex_Living - City Loft",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 8,
+      "publicReview": "Great location and nice interior design.",
+      "reviewCategory": [
+        {"category": "location", "rating": 9},
+        {"category": "cleanliness", "rating": 8}
+      ],
+      "channel": "Booking.com",
+      "channelId": "BK-4001",
+      "guestName": "Ibrahim S.",
+      "date": "2024-11-01T13:00:00",
+      "displayOnWebsite": true
+    },
+    {
+      "id": 7461,
+      "listingId": 1005,
+      "listingName": "Flex_Living - Budget Studio",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 6,
+      "publicReview": "Affordable and central, but small room.",
+      "reviewCategory": [
+        {"category": "value", "rating": 8},
+        {"category": "space", "rating": 4}
+      ],
+      "channel": "Hostaway",
+      "channelId": "HW-5001",
+      "guestName": "Priya N.",
+      "date": "2024-02-15T18:25:00",
+      "displayOnWebsite": false
+    },
+    {
+      "id": 7462,
+      "listingId": 1001,
+      "listingName": "Flex_Living - Downtown Studio",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 9,
+      "publicReview": "Excellent host and fast responses.",
+      "reviewCategory": [
+        {"category": "communication", "rating": 10},
+        {"category": "cleanliness", "rating": 9}
+      ],
+      "channel": "Airbnb",
+      "channelId": "AB-1002",
+      "guestName": "Hans G.",
+      "date": "2024-12-03T09:45:00",
+      "displayOnWebsite": true
+    },
+    {
+      "id": 7463,
+      "listingId": 1005,
+      "listingName": "Flex_Living - Budget Studio",
+      "type": "guest-to-host",
+      "status": "published",
+      "rating": 7,
+      "publicReview": "Solid stay for price; host was friendly.",
+      "reviewCategory": [
+        {"category": "value", "rating": 8},
+        {"category": "cleanliness", "rating": 6}
+      ],
+      "channel": "Booking.com",
+      "channelId": "BK-5002",
+      "guestName": "Emma L.",
+      "date": "2024-03-10T12:00:00",
+      "displayOnWebsite": false
+    }
+  ]
+}
