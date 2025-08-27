@@ -1,18 +1,13 @@
 # streamlit_app.py
 """
 Flex Living - Reviews Dashboard (Streamlit)
-Single-file app that:
-- Loads mocked Hostaway JSON (mock_reviews.json)
-- Normalizes & displays per-listing metrics
-- Allows filtering by rating, channel, category, date range
-- Shows trends (monthly average rating)
-- Lets manager toggle which reviews are shown on the public website and save changes locally
 """
 
 import streamlit as st
 import pandas as pd
 import altair as alt
 import json
+import requests
 from datetime import datetime
 from pathlib import Path
 
@@ -20,13 +15,44 @@ DATA_PATH = Path("mock_reviews.json")
 
 st.set_page_config(page_title="Flex Living — Reviews Dashboard", layout="wide")
 
+# 🔑 Put your Hostaway credentials here
+HOSTAWAY_ACCOUNT_ID = st.secrets.get("HOSTAWAY_ACCOUNT_ID", "")
+HOSTAWAY_API_KEY = st.secrets.get("HOSTAWAY_API_KEY", "")
+
+# ----------------- API Fetch -----------------
+def fetch_hostaway_reviews(account_id, api_key, limit=50):
+    """Fetch reviews from Hostaway API. Returns raw JSON or None if failed/empty."""
+    if not account_id or not api_key:
+        return None
+    
+    url = f"https://api.hostaway.com/v1/reviews?limit={limit}"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Account-Id": str(account_id)
+    }
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            if "result" in data and len(data["result"]) > 0:
+                return data
+    except Exception as e:
+        st.warning(f"Hostaway API error: {e}")
+    return None
+
+# ----------------- Load Data -----------------
 @st.cache_data
-@st.cache_data
-def load_reviews(path: Path):
-    with path.open("r", encoding="utf-8") as f:
-        raw = json.load(f)   # <-- keep the whole JSON
+def load_reviews(path: Path, account_id=None, api_key=None):
+    # 1. Try Hostaway API first
+    api_data = fetch_hostaway_reviews(account_id, api_key)
+    if api_data:
+        raw = api_data
+    else:
+        # 2. Fallback: local mock JSON
+        with path.open("r", encoding="utf-8") as f:
+            raw = json.load(f)
+    
     reviews = raw.get("result", [])
-    # Normalize to DataFrame
     rows = []
     for r in reviews:
         base = {
@@ -43,24 +69,26 @@ def load_reviews(path: Path):
             "displayOnWebsite": r.get("displayOnWebsite", False),
         }
         # parse date
-        date_str = r.get("date")
+        date_str = r.get("date") or r.get("created")
         try:
             dt = datetime.fromisoformat(date_str)
         except Exception:
-            dt = None
+            try:
+                dt = pd.to_datetime(date_str, errors="coerce")
+            except Exception:
+                dt = None
         base["date"] = dt
         # categories: flatten
         for cat in r.get("reviewCategory", []):
             base[f"cat_{cat.get('category')}"] = cat.get("rating")
         rows.append(base)
     df = pd.DataFrame(rows)
-    df["date"] = pd.to_datetime(df["date"])
-    df["year_month"] = df["date"].dt.to_period("M").astype(str)
-    return df, raw   # <--- return the whole raw JSON, not reviews list
-
+    if not df.empty:
+        df["date"] = pd.to_datetime(df["date"])
+        df["year_month"] = df["date"].dt.to_period("M").astype(str)
+    return df, raw
 
 def save_reviews(original_raw, df, path: Path):
-    # map displayOnWebsite changes back to original_raw by id
     id_to_display = df.set_index("id")["displayOnWebsite"].to_dict()
     for r in original_raw.get("result", []):
         if r.get("id") in id_to_display:
@@ -69,16 +97,16 @@ def save_reviews(original_raw, df, path: Path):
         json.dump(original_raw, f, indent=2, default=str)
     st.success(f"Saved {len(id_to_display)} review display flags to {path}")
 
-# UI layout
+# ----------------- UI -----------------
 st.title("Flex Living — Reviews Dashboard")
 st.write("Manager view • See per-property performance, filter reviews, and choose which reviews appear on the public website.")
 
-# Load data
 try:
-    df, raw_json = load_reviews(DATA_PATH)
+    df, raw_json = load_reviews(DATA_PATH, HOSTAWAY_ACCOUNT_ID, HOSTAWAY_API_KEY)
 except FileNotFoundError:
-    st.error(f"Mock data not found: {DATA_PATH}. Add `mock_reviews.json` to the same folder as this app.")
+    st.error(f"Mock data not found: {DATA_PATH}. Add `mock_reviews.json` to the same folder.")
     st.stop()
+
 
 # Sidebar: filters
 st.sidebar.header("Filters & Controls")
