@@ -263,11 +263,32 @@ st.info("Tip: Press Save in the sidebar to write display flags to `mock_reviews.
 
 st.caption("Built for the Flex Living developer assessment. Contact the product owner to wire this to a real Hostaway integration and a persistent DB.")
 # ----------------- Public View: Property Page -----------------
+# ----------------- Public View: Property Page -----------------
 st.sidebar.markdown("---")
 view_mode = st.sidebar.radio("View Mode", ["Manager Dashboard", "Public Property Page"])
 
 if view_mode == "Public Property Page":
-    st.title("Flex Living — Property Page")
+    # Flex-branded green header
+    st.markdown(
+        """
+        <div style="
+            background-color: #006B5B;  /* Flex dark green */
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        ">
+            <h2 style="
+                color: white;
+                margin: 0;
+                font-weight: 500;
+            ">
+                Flex Living — Property Page
+            </h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.write("Public view • Reviews shown here are only those approved by managers.")
 
     # Select property
@@ -288,42 +309,7 @@ if view_mode == "Public Property Page":
     if approved_reviews.empty:
         st.info("No reviews approved for this property yet.")
     else:
-        # Flex-branded green header
-            st.markdown(
-                """
-                <div style="
-                    background-color: #006B5B;  /* Flex dark green */
-                    padding: 16px 24px;
-                    border-radius: 8px;
-                    margin-bottom: 20px;
-                ">
-                    <h2 style="
-                        color: white;
-                        margin: 0;
-                        font-weight: 500;
-                    ">
-                        Flex Living — Property Page
-                    </h2>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        # for _, row in approved_reviews.iterrows():
-        #     with st.container():
-        #         st.markdown(f"⭐ {row['rating'] if pd.notna(row['rating']) else 'N/A'}")
-        #         st.markdown(f"**{row['guestName']}** — {row['date'].date() if pd.notna(row['date']) else 'Unknown date'}")
-        #         if row.get("publicReview"):
-        #             st.write(f"“{row['publicReview']}”")
-        #         st.markdown("---")
-         # for _, row in approved_reviews.iterrows():
-         #    with st.container():
-         #         st.markdown("—" * 20)  # subtle divider
-         #         st.markdown(f"⭐ {int(row['rating']) if pd.notna(row['rating']) else 'N/A'}")
-         #         st.markdown(f"**{row['guestName']}** • {row['date'].date() if pd.notna(row['date']) else 'Unknown'}")
-         #         if row.get("publicReview"):
-         #             st.write(f"“{row['publicReview']}”")
         for _, row in approved_reviews.iterrows():
-            
             st.markdown(
                 f"""
                 <div style="
@@ -347,74 +333,3 @@ if view_mode == "Public Property Page":
                 """,
                 unsafe_allow_html=True
             )
-
-                # st.markdown(
-                # f"""
-                # <div style="
-                #     background-color: #ffffff;
-                #     border-radius: 16px;
-                #     padding: 20px;
-                #     margin-bottom: 20px;
-                #     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                # ">
-                #     <h4 style="margin: 0; color:#333;">
-                #         ⭐ {int(row['rating']) if pd.notna(row['rating']) else 'N/A'}
-                #     </h4>
-                #     <p style="margin: 6px 0; font-size: 16px; color:#555;">
-                #         “{row['publicReview'] if row.get('publicReview') else ''}”
-                #     </p>
-                #     <p style="margin: 0; font-size: 14px; color:#888;">
-                #         — <b>{row['guestName']}</b> • {row['date'].date() if pd.notna(row['date']) else 'Unknown'}
-                #     </p>
-                # </div>
-                # """,
-                # unsafe_allow_html=True
-                # )
-                    # Flex Living Branding
-                    # st.markdown("""
-                    #     <div style="background-color:#1b3b36; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    #         <h2 style="color:white; margin:0; display:flex; align-items:center;">
-                    #             <span style="font-weight:lighter; margin-right:8px;">🏠</span> 
-                    #             the flex. — Property Page
-                    #         </h2>
-                    #     </div>
-                    # """, unsafe_allow_html=True)
-                    
-                    # # Property image banner (placeholder)
-                    # st.image("https://via.placeholder.com/1200x500?text=Property+Hero+Image", use_container_width=True)
-                    
-                    # st.markdown(f"## {selected_property}")
-                    # st.write("Property description and details would go here (mockup).")
-                    
-                    # # Guest Reviews
-                    # st.markdown("### Guest Reviews")
-                    # if approved_reviews.empty:
-                    #     st.info("No reviews approved for this property yet.")
-                    # else:
-                    #     for _, row in approved_reviews.iterrows():
-                    #         st.markdown(
-                    #             f"""
-                    #             <div style="
-                    #                 background-color: #ffffff;
-                    #                 border-radius: 16px;
-                    #                 padding: 20px;
-                    #                 margin-bottom: 20px;
-                    #                 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                    #                 border-left: 6px solid #1b3b36;
-                    #             ">
-                    #                 <h4 style="margin: 0; color:#1b3b36;">
-                    #                     ⭐ {int(row['rating']) if pd.notna(row['rating']) else 'N/A'}
-                    #                 </h4>
-                    #                 <p style="margin: 6px 0; font-size: 16px; color:#555;">
-                    #                     “{row['publicReview'] if row.get('publicReview') else ''}”
-                    #                 </p>
-                    #                 <p style="margin: 0; font-size: 14px; color:#888;">
-                    #                     — <b>{row['guestName']}</b> • {row['date'].date() if pd.notna(row['date']) else 'Unknown'}
-                    #                 </p>
-                    #             </div>
-                    #             """,
-                    #             unsafe_allow_html=True
-                    #         )
-                    
-                    
-                            
