@@ -180,21 +180,34 @@ st.markdown("---")
 
 # ----------------- Charts -----------------
 st.subheader("Trends & Distributions")
+# Enhanced Trends Chart
 if not filtered.empty:
-    trend = filtered.groupby("year_month").agg(avg_rating=("rating","mean"), count=("id","count")).reset_index()
-    chart = alt.Chart(trend).mark_line(point=True).encode(
-        x=alt.X('year_month:T', title='Month'),
-        y=alt.Y('avg_rating:Q', title='Avg rating'),
-        tooltip=['year_month', alt.Tooltip('avg_rating:Q', format=".2f"), 'count']
-    ).properties(height=250)
-    st.altair_chart(chart, use_container_width=True)
+    trend = filtered.groupby("year_month").agg(
+        avg_rating=("rating","mean"),
+        count=("id","count"),
+        pct_displayed=("displayOnWebsite", "mean")
+    ).reset_index()
 
-    hist = alt.Chart(filtered).mark_bar().encode(
-        alt.X("rating:Q", bin=alt.Bin(step=0.5), title="Rating"),
-        y='count()',
-        tooltip=[alt.Tooltip('count()', title='Number')]
-    ).properties(height=200)
-    st.altair_chart(hist, use_container_width=True)
+    trend["pct_displayed"] = (trend["pct_displayed"] * 100).round(1)
+
+    line_chart = alt.Chart(trend).mark_line(point=True, interpolate='monotone').encode(
+        x=alt.X('year_month:T', title='Month'),
+        y=alt.Y('avg_rating:Q', title='Avg rating', scale=alt.Scale(domain=[0,10])),
+        color=alt.Color('avg_rating:Q', scale=alt.Scale(scheme='greenblue')),
+        tooltip=[
+            alt.Tooltip('year_month:T', title='Month'),
+            alt.Tooltip('avg_rating:Q', title='Avg Rating', format=".2f"),
+            alt.Tooltip('count:Q', title='Number of Reviews'),
+            alt.Tooltip('pct_displayed:Q', title='% Shown on Website', format=".1f")
+        ]
+    ).properties(
+        height=300,
+        width=700,
+        title="Monthly Average Rating & Trends"
+    ).interactive()
+
+    st.altair_chart(line_chart, use_container_width=True)
+
 else:
     st.info("No reviews match your filters.")
 
