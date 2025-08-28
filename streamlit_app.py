@@ -179,10 +179,11 @@ with col4:
 st.markdown("---")
 
 # ----------------- Charts -----------------
+# ----------------- Charts -----------------
 st.subheader("Trends & Distributions")
-# Enhanced Trends Chart
-# Simple Trends Line Chart
+
 if not filtered.empty:
+    # ----- Trends Line Chart -----
     trend = filtered.groupby("year_month").agg(
         avg_rating=("rating","mean"),
         count=("id","count")
@@ -202,10 +203,21 @@ if not filtered.empty:
 
     st.altair_chart(line_chart, use_container_width=True)
 
+    # ----- Ratings Distribution Bar Chart -----
+    rating_hist = alt.Chart(filtered).mark_bar().encode(
+        x=alt.X("rating:Q", bin=alt.Bin(step=0.5), title="Rating"),
+        y=alt.Y('count()', title="Number of Reviews"),
+        tooltip=[alt.Tooltip('count()', title='Number of Reviews')]
+    ).properties(
+        height=200
+    )
+
+    st.altair_chart(rating_hist, use_container_width=True)
 
 else:
     st.info("No reviews match your filters.")
 
+# ----------------- Per-property performance -----
 st.subheader("Per-property performance")
 summary = filtered.groupby("listingName").agg(
     avg_rating=("rating","mean"),
@@ -218,6 +230,7 @@ if not summary.empty:
     st.dataframe(summary.sort_values(["avg_rating","reviews"], ascending=[False, False]), height=220)
 else:
     st.write("No property matches filters.")
+
 
 # ----------------- Reviews (Filtered) BELOW Charts -----------------
 st.subheader("Reviews (filtered)")
