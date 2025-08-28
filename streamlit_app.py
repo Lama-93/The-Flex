@@ -288,12 +288,36 @@ if view_mode == "Public Property Page":
         #         if row.get("publicReview"):
         #             st.write(f"“{row['publicReview']}”")
         #         st.markdown("---")
-         for _, row in approved_reviews.iterrows():
-            with st.container():
-                 st.markdown("—" * 20)  # subtle divider
-                 st.markdown(f"⭐ {int(row['rating']) if pd.notna(row['rating']) else 'N/A'}")
-                 st.markdown(f"**{row['guestName']}** • {row['date'].date() if pd.notna(row['date']) else 'Unknown'}")
-                 if row.get("publicReview"):
-                     st.write(f"“{row['publicReview']}”")
+         # for _, row in approved_reviews.iterrows():
+         #    with st.container():
+         #         st.markdown("—" * 20)  # subtle divider
+         #         st.markdown(f"⭐ {int(row['rating']) if pd.notna(row['rating']) else 'N/A'}")
+         #         st.markdown(f"**{row['guestName']}** • {row['date'].date() if pd.notna(row['date']) else 'Unknown'}")
+         #         if row.get("publicReview"):
+         #             st.write(f"“{row['publicReview']}”")
+                   for _, row in approved_reviews.iterrows():
+    st.markdown(
+        f"""
+        <div style="
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        ">
+            <h4 style="margin: 0; color:#333;">
+                ⭐ {int(row['rating']) if pd.notna(row['rating']) else 'N/A'}
+            </h4>
+            <p style="margin: 6px 0; font-size: 16px; color:#555;">
+                “{row['publicReview'] if row.get('publicReview') else ''}”
+            </p>
+            <p style="margin: 0; font-size: 14px; color:#888;">
+                — <b>{row['guestName']}</b> • {row['date'].date() if pd.notna(row['date']) else 'Unknown'}
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 
