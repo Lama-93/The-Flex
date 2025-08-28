@@ -288,6 +288,26 @@ if view_mode == "Public Property Page":
     if approved_reviews.empty:
         st.info("No reviews approved for this property yet.")
     else:
+        # Flex-branded green header
+            st.markdown(
+                """
+                <div style="
+                    background-color: #006B5B;  /* Flex dark green */
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                ">
+                    <h2 style="
+                        color: white;
+                        margin: 0;
+                        font-weight: 500;
+                    ">
+                        Flex Living — Property Page
+                    </h2>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
         # for _, row in approved_reviews.iterrows():
         #     with st.container():
         #         st.markdown(f"⭐ {row['rating'] if pd.notna(row['rating']) else 'N/A'}")
