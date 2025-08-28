@@ -1,3 +1,7 @@
 streamlit
 plotly
 pandas
+fastapi
+uvicorn[standard]
+pandas
+requests
