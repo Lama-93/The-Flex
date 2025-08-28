@@ -274,7 +274,7 @@ if view_mode == "Public Property Page":
 
     # Property detail mockup
     st.subheader(selected_property)
-    st.image("https://via.placeholder.com/800x400?text=Property+Image", use_column_width=True)  
+    st.image("https://via.placeholder.com/800x400?text=Property+Image", use_container_width=True)  
     st.write("Property description and details would go here (mockup).")
 
     st.markdown("### Guest Reviews")
