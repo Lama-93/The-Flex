@@ -1,14 +1,19 @@
-# ----------------- streamlit_app.py -----------------
+# streamlit_app.py
 """
 Flex Living - Reviews Dashboard (Streamlit)
-Manager can select reviews to show on public page.
-Always reads from local mock_reviews.json after save.
+Single-file app that:
+- Loads Hostaway API reviews or falls back to mock_reviews.json
+- Normalizes & displays per-listing metrics
+- Allows filtering by rating, channel, category, date range
+- Shows trends (monthly average rating)
+- Lets manager toggle which reviews are shown on the public website and save changes locally
 """
 
 import streamlit as st
 import pandas as pd
 import altair as alt
 import json
+import requests
 from datetime import datetime
 from pathlib import Path
 
@@ -22,12 +27,42 @@ DATA_PATH = Path("mock_reviews.json")
 
 st.set_page_config(page_title="Flex Living — Reviews Dashboard", layout="wide")
 
+# 🔑 Hostaway credentials from Streamlit secrets
+HOSTAWAY_ACCOUNT_ID = st.secrets.get("HOSTAWAY_ACCOUNT_ID", "")
+HOSTAWAY_API_KEY = st.secrets.get("HOSTAWAY_API_KEY", "")
+
+# ----------------- API Fetch -----------------
+def fetch_hostaway_reviews(account_id, api_key, limit=50):
+    """Fetch reviews from Hostaway API. Returns raw JSON or None if failed/empty."""
+    if not account_id or not api_key:
+        return None
+    
+    url = f"https://api.hostaway.com/v1/reviews?limit={limit}"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Account-Id": str(account_id)
+    }
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            if "result" in data and len(data["result"]) > 0:
+                return data
+    except Exception as e:
+        st.warning(f"Hostaway API error: {e}")
+    return None
+
 # ----------------- Load Data -----------------
 @st.cache_data
-def load_reviews_from_local(path: Path):
-    """Load reviews from local JSON and normalize"""
-    with path.open("r", encoding="utf-8") as f:
-        raw = json.load(f)
+def load_reviews(path: Path, account_id=None, api_key=None):
+    # Always read from local mock_reviews.json
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            raw = json.load(f)
+        source = "mock"
+    except FileNotFoundError:
+        st.error(f"Mock data not found: {path}. Add `mock_reviews.json` to the app folder.")
+        st.stop()
     
     reviews = raw.get("result", [])
     rows = []
@@ -46,13 +81,13 @@ def load_reviews_from_local(path: Path):
             "displayOnWebsite": r.get("displayOnWebsite", False),
         }
         # parse date
-        date_str = r.get("date") or r.get("created")
+        date_str = r.get("date") or r.get("submittedAt")
         try:
             dt = datetime.fromisoformat(date_str)
         except Exception:
             dt = pd.to_datetime(date_str, errors="coerce")
         base["date"] = dt
-        # flatten categories
+        # categories: flatten
         for cat in r.get("reviewCategory", []):
             base[f"cat_{cat.get('category')}"] = cat.get("rating")
         rows.append(base)
@@ -62,10 +97,9 @@ def load_reviews_from_local(path: Path):
         df["date"] = pd.to_datetime(df["date"])
         df["year_month"] = df["date"].dt.to_period("M").astype(str)
     
-    return df, raw
+    return df, raw, source
 
 def save_reviews(original_raw, df, path: Path):
-    """Save displayOnWebsite flags to local JSON"""
     id_to_display = df.set_index("id")["displayOnWebsite"].to_dict()
     for r in original_raw.get("result", []):
         if r.get("id") in id_to_display:
@@ -79,16 +113,12 @@ st.title("Flex Living — Reviews Dashboard")
 st.write("Manager view • See per-property performance, filter reviews, and choose which reviews appear on the public website.")
 
 # Load data
-try:
-    df, raw_json = load_reviews_from_local(DATA_PATH)
-except FileNotFoundError:
-    st.error(f"Mock data not found: {DATA_PATH}. Add `mock_reviews.json` to the same folder.")
-    st.stop()
+df, raw_json, data_source = load_reviews(DATA_PATH, HOSTAWAY_ACCOUNT_ID, HOSTAWAY_API_KEY)
 
 # Sidebar: data source status
 st.sidebar.markdown("---")
 st.sidebar.subheader("Data Source")
-st.sidebar.info("Using local mock JSON ⚠️")
+st.sidebar.info("Always using local mock_reviews.json ✅")
 
 # Sidebar: filters
 st.sidebar.header("Filters & Controls")
@@ -96,6 +126,7 @@ listings = ["All"] + sorted(df["listingName"].dropna().unique().tolist())
 selected_listing = st.sidebar.selectbox("Property (listing)", listings, index=0)
 channels = ["All"] + sorted(df["channel"].dropna().unique().tolist())
 selected_channel = st.sidebar.selectbox("Channel", channels, index=0)
+
 min_rating, max_rating = st.sidebar.slider("Rating range", 0.0, 10.0, (0.0, 10.0), step=0.5)
 
 # categories discovered dynamically
@@ -113,8 +144,6 @@ st.sidebar.markdown("---")
 st.sidebar.write("Save changes to `displayOnWebsite` locally:")
 if st.sidebar.button("Save display flags (local file)"):
     save_reviews(raw_json, df, DATA_PATH)
-
-st.sidebar.write("Note: Saving updates `mock_reviews.json`. Public page shows only selected reviews.")
 
 # ----------------- Filtering -----------------
 filtered = df.copy()
@@ -149,85 +178,74 @@ with col4:
 
 st.markdown("---")
 
-# ----------------- Charts & Tables -----------------
-left, right = st.columns([2,3])
+# ----------------- Charts -----------------
+st.subheader("Trends & Distributions")
+if not filtered.empty:
+    trend = filtered.groupby("year_month").agg(avg_rating=("rating","mean"), count=("id","count")).reset_index()
+    chart = alt.Chart(trend).mark_line(point=True).encode(
+        x=alt.X('year_month:T', title='Month'),
+        y=alt.Y('avg_rating:Q', title='Avg rating'),
+        tooltip=['year_month', alt.Tooltip('avg_rating:Q', format=".2f"), 'count']
+    ).properties(height=250)
+    st.altair_chart(chart, use_container_width=True)
 
-with left:
-    st.subheader("Trends & Distributions")
-    if not filtered.empty:
-        trend = filtered.groupby("year_month").agg(avg_rating=("rating","mean"), count=("id","count")).reset_index()
-        chart = alt.Chart(trend).mark_line(point=True).encode(
-            x=alt.X('year_month:T', title='Month'),
-            y=alt.Y('avg_rating:Q', title='Avg rating'),
-            tooltip=['year_month', alt.Tooltip('avg_rating:Q', format=".2f"), 'count']
-        ).properties(height=250)
-        st.altair_chart(chart, use_container_width=True)
+    hist = alt.Chart(filtered).mark_bar().encode(
+        alt.X("rating:Q", bin=alt.Bin(step=0.5), title="Rating"),
+        y='count()',
+        tooltip=[alt.Tooltip('count()', title='Number')]
+    ).properties(height=200)
+    st.altair_chart(hist, use_container_width=True)
+else:
+    st.info("No reviews match your filters.")
 
-        hist = alt.Chart(filtered).mark_bar().encode(
-            alt.X("rating:Q", bin=alt.Bin(step=0.5), title="Rating"),
-            y='count()',
-            tooltip=[alt.Tooltip('count()', title='Number')]
-        ).properties(height=200)
-        st.altair_chart(hist, use_container_width=True)
-    else:
-        st.info("No reviews match your filters.")
+st.subheader("Per-property performance")
+summary = filtered.groupby("listingName").agg(
+    avg_rating=("rating","mean"),
+    reviews=("id","count"),
+    pct_displayed=("displayOnWebsite", "mean")
+).reset_index()
+if not summary.empty:
+    summary["avg_rating"] = summary["avg_rating"].round(2)
+    summary["pct_displayed"] = (summary["pct_displayed"] * 100).round(1).astype(str) + "%"
+    st.dataframe(summary.sort_values(["avg_rating","reviews"], ascending=[False, False]), height=220)
+else:
+    st.write("No property matches filters.")
 
-    st.subheader("Per-property performance")
-    summary = filtered.groupby("listingName").agg(
-        avg_rating=("rating","mean"),
-        reviews=("id","count"),
-        pct_displayed=("displayOnWebsite", "mean")
-    ).reset_index()
-    if not summary.empty:
-        summary["avg_rating"] = summary["avg_rating"].round(2)
-        summary["pct_displayed"] = (summary["pct_displayed"] * 100).round(1).astype(str) + "%"
-        st.dataframe(summary.sort_values(["avg_rating","reviews"], ascending=[False, False]), height=220)
-    else:
-        st.write("No property matches filters.")
+# ----------------- Reviews (Filtered) BELOW Charts -----------------
+st.subheader("Reviews (filtered)")
+if filtered.empty:
+    st.write("No reviews to show.")
+else:
+    page_size = 8
+    total = len(filtered)
+    page = st.number_input("Page", min_value=1, max_value=(total-1)//page_size + 1, value=1, step=1)
+    start = (page-1)*page_size
+    end = start + page_size
+    page_df = filtered.sort_values("date", ascending=False).iloc[start:end].copy()
 
-with right:
-    st.subheader("Reviews (filtered)")
-    if filtered.empty:
-        st.write("No reviews to show.")
-    else:
-        page_size = 8
-        total = len(filtered)
-        page = st.number_input("Page", min_value=1, max_value=(total-1)//page_size + 1, value=1, step=1)
-        start = (page-1)*page_size
-        end = start + page_size
-        page_df = filtered.sort_values("date", ascending=False).iloc[start:end].copy()
+    for idx, row in page_df.iterrows():
+        box = st.container()
+        with box:
+            st.markdown(f"**{row['listingName']}** — {row['guestName']} • {row['date'].date() if pd.notna(row['date']) else 'Unknown date'}")
+            st.write(f"**Rating:** {row['rating'] if pd.notna(row['rating']) else 'N/A'} • **Channel:** {row['channel']} • **Type:** {row['type']}")
+            if pd.notna(row.get("publicReview")) and row.get("publicReview"):
+                st.write(row.get("publicReview"))
+            cats = {c.replace("cat_",""): row[c] for c in page_df.columns if c.startswith("cat_") and pd.notna(row.get(c))}
+            if cats:
+                cat_line = " • ".join([f"{k}: {int(v) if pd.notna(v) else 'N/A'}" for k,v in cats.items()])
+                st.caption(cat_line)
+            # Checkbox to approve for public page
+            key = f"display_{int(row['id'])}"
+            val = st.checkbox("Show", value=bool(row["displayOnWebsite"]), key=key)
+            df.loc[df["id"] == row["id"], "displayOnWebsite"] = bool(val)
 
-        for idx, row in page_df.iterrows():
-            box = st.container()
-            with box:
-                cols = st.columns([6,1])
-                with cols[0]:
-                    st.markdown(f"**{row['listingName']}** — {row['guestName']} • {row['date'].date() if pd.notna(row['date']) else 'Unknown date'}")
-                    st.write(f"**Rating:** {row['rating'] if pd.notna(row['rating']) else 'N/A'} • **Channel:** {row['channel']} • **Type:** {row['type']}")
-                    if pd.notna(row.get("publicReview")) and row.get("publicReview"):
-                        st.write(row.get("publicReview"))
-                    cats = {c.replace("cat_",""): row[c] for c in page_df.columns if c.startswith("cat_") and pd.notna(row.get(c))}
-                    if cats:
-                        cat_line = " • ".join([f"{k}: {int(v) if pd.notna(v) else 'N/A'}" for k,v in cats.items()])
-                        st.caption(cat_line)
-                with cols[1]:
-                    key = f"display_{int(row['id'])}"
-                    val = st.checkbox("Show", value=bool(row["displayOnWebsite"]), key=key)
-                    df.loc[df["id"] == row["id"], "displayOnWebsite"] = bool(val)
-
-        st.markdown(f"Showing {start+1}-{min(end,total)} of {total} reviews (filtered).")
-
-st.markdown("---")
-st.info("Tip: Press Save in the sidebar to write display flags to `mock_reviews.json`. Public page shows only approved reviews.")
-
-st.caption("Built for the Flex Living developer assessment. Contact the product owner to wire this to a real Hostaway integration and a persistent DB.")
+    st.markdown(f"Showing {start+1}-{min(end,total)} of {total} reviews (filtered).")
 
 # ----------------- Public View: Property Page -----------------
 st.sidebar.markdown("---")
 view_mode = st.sidebar.radio("View Mode", ["Manager Dashboard", "Public Property Page"])
 
 if view_mode == "Public Property Page":
-    # Flex-branded green header
     st.markdown(
         """
         <div style="
@@ -261,7 +279,7 @@ if view_mode == "Public Property Page":
 
     # Property detail mockup
     st.subheader(selected_property)
-    st.image("https://via.placeholder.com/800x400?text=Property+Image", use_container_width=True)  
+    st.image("https://via.placeholder.com/800x400?text=Property+Image", use_container_width=True)
     st.write("Property description and details would go here (mockup).")
 
     st.markdown("### Guest Reviews")
