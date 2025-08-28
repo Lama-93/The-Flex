@@ -272,7 +272,7 @@ if view_mode == "Public Property Page":
     st.markdown(
         """
         <div style="
-            background-color: #006B5B;  /* Flex dark green */
+            background-color: #1b3b36;  /* Flex dark green */
             padding: 16px 24px;
             border-radius: 8px;
             margin-bottom: 20px;
