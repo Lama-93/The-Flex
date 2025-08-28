@@ -281,10 +281,19 @@ if view_mode == "Public Property Page":
     if approved_reviews.empty:
         st.info("No reviews approved for this property yet.")
     else:
-        for _, row in approved_reviews.iterrows():
+        # for _, row in approved_reviews.iterrows():
+        #     with st.container():
+        #         st.markdown(f"⭐ {row['rating'] if pd.notna(row['rating']) else 'N/A'}")
+        #         st.markdown(f"**{row['guestName']}** — {row['date'].date() if pd.notna(row['date']) else 'Unknown date'}")
+        #         if row.get("publicReview"):
+        #             st.write(f"“{row['publicReview']}”")
+        #         st.markdown("---")
+         for _, row in approved_reviews.iterrows():
             with st.container():
-                st.markdown(f"⭐ {row['rating'] if pd.notna(row['rating']) else 'N/A'}")
-                st.markdown(f"**{row['guestName']}** — {row['date'].date() if pd.notna(row['date']) else 'Unknown date'}")
-                if row.get("publicReview"):
-                    st.write(f"“{row['publicReview']}”")
-                st.markdown("---")
+                 st.markdown("—" * 20)  # subtle divider
+                 st.markdown(f"⭐ {int(row['rating']) if pd.notna(row['rating']) else 'N/A'}")
+                 st.markdown(f"**{row['guestName']}** • {row['date'].date() if pd.notna(row['date']) else 'Unknown'}")
+                 if row.get("publicReview"):
+                     st.write(f"“{row['publicReview']}”")
+
+
