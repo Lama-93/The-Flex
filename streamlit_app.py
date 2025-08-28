@@ -118,7 +118,7 @@ df, raw_json, data_source = load_reviews(DATA_PATH, HOSTAWAY_ACCOUNT_ID, HOSTAWA
 # Sidebar: data source status
 st.sidebar.markdown("---")
 st.sidebar.subheader("Data Source")
-st.sidebar.info("Always using local mock_reviews.json ✅")
+st.sidebar.info("Using mock_reviews.json ✅")
 
 # Sidebar: filters
 st.sidebar.header("Filters & Controls")
