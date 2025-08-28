@@ -21,7 +21,7 @@ from pathlib import Path
 logo_path = Path("flex_logo.png")
 
 # Show logo in sidebar
-st.sidebar.image(str(logo_path), use_column_width=True)
+st.sidebar.image(str(logo_path), use_container_width=True)
 
 
 DATA_PATH = Path("mock_reviews.json")
