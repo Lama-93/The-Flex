@@ -17,6 +17,13 @@ import requests
 from datetime import datetime
 from pathlib import Path
 
+# Path to logo
+logo_path = Path("flex_logo.png")
+
+# Show logo in sidebar
+st.sidebar.image(str(logo_path), use_column_width=True)
+
+
 DATA_PATH = Path("mock_reviews.json")
 
 st.set_page_config(page_title="Flex Living — Reviews Dashboard", layout="wide")
