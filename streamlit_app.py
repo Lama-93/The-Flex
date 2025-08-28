@@ -314,7 +314,7 @@ if view_mode == "Public Property Page":
                     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
                     border-left: 6px solid #1b3b36;
                 ">
-                    <h4 style="margin: 0; color:#1b3b36;">
+                    <h4 style="margin: 0; color:#333;">
                         ⭐ {int(row['rating']) if pd.notna(row['rating']) else 'N/A'}
                     </h4>
                     <p style="margin: 6px 0; font-size: 16px; color:#555;">
